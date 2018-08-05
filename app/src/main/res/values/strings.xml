@@ -5,7 +5,7 @@
 
     <!--Navigation-->
     <string name="tab_main">Main</string>
-    <string name="tab_feed">Feed</string>
+    <string name="tab_feed">History</string>
     <string name="tab_transparent"> </string>
     <string name="tab_report">Reports</string>
     <string name="tab_settings">Settings</string>

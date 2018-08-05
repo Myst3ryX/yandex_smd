@@ -1,9 +1,10 @@
 package com.sergon146.business.repository;
 
+import com.sergon146.business.model.Balance;
 import com.sergon146.business.model.ExchangeRate;
+import com.sergon146.business.model.Transaction;
 import com.sergon146.business.model.Wallet;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -14,7 +15,9 @@ public interface WalletRepository {
 
     Observable<Wallet> getWallet(long id);
 
-    Observable<BigDecimal> getWalletsBalanceSum(List<Wallet> wallets, ExchangeRate rate);
+    Observable<Balance> getWalletsBalanceSum(ExchangeRate rate);
+
+    void applyWalletTransaction(long id, Transaction transaction);
 
     long addWallet(Wallet wallet);
 }

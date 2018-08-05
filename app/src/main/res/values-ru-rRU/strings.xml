@@ -4,7 +4,7 @@
 
     <!--Navigation-->
     <string name="tab_main">Главная</string>
-    <string name="tab_feed">Лента</string>
+    <string name="tab_feed">История</string>
     <string name="tab_transparent"> </string>
     <string name="tab_report">Отчёты</string>
     <string name="tab_settings">Настройки</string>

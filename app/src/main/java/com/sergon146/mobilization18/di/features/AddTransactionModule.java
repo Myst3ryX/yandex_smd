@@ -1,6 +1,7 @@
 package com.sergon146.mobilization18.di.features;
 
 import com.sergon146.business.contracts.AddTransactionUseCase;
+import com.sergon146.business.repository.ExchangeRepository;
 import com.sergon146.business.repository.TransactionRepository;
 import com.sergon146.business.repository.WalletRepository;
 import com.sergon146.business.usecase.AddTransactionUseCaseImpl;
@@ -15,9 +16,14 @@ public class AddTransactionModule {
 
     @Provides
     static AddTransactionUseCase provideAddTransactionUseCase(
+            ExchangeRepository exchangeRepository,
             WalletRepository walletRepository,
             TransactionRepository transactionRepository) {
-        return new AddTransactionUseCaseImpl(walletRepository, transactionRepository);
+
+        return new AddTransactionUseCaseImpl(
+                exchangeRepository,
+                walletRepository,
+                transactionRepository);
     }
 
     @Provides

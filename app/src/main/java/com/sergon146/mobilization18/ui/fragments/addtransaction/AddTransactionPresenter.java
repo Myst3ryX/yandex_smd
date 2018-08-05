@@ -20,17 +20,20 @@ public class AddTransactionPresenter extends BaseDialogPresenter<AddTransactionV
     @Override
     protected void onFirstViewAttach() {
         super.onFirstViewAttach();
+
         bind(onUi(useCase.getWallets())
                 .subscribe(wallets -> getViewState().showWallets(wallets)));
-    }
 
-
-    @Override
-    protected String getScreenTag() {
-        return "AddTransactionPresenter";
+        bind(onUi(useCase.getExchangeRate())
+                .subscribe(rate -> getViewState().showExchangeRate(rate)));
     }
 
     public void addTransaction(Transaction transaction) {
         useCase.addTransaction(transaction);
+    }
+
+    @Override
+    protected String getScreenTag() {
+        return "AddTransactionPresenter";
     }
 }

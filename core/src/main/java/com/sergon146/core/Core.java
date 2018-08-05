@@ -6,10 +6,16 @@ import android.content.Context;
 import com.facebook.stetho.okhttp3.StethoInterceptor;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.sergon146.business.model.Wallet;
+import com.sergon146.business.model.types.Currency;
+import com.sergon146.business.model.types.WalletType;
 import com.sergon146.core.api.ApiService;
 import com.sergon146.core.db.WalletsDatabase;
+import com.sergon146.core.db.entity.WalletEntity;
+import com.sergon146.core.mapper.WalletEntityMapper;
 import com.sergon146.core.rx.RxThreadCallAdapter;
 
+import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 
@@ -56,6 +62,12 @@ public class Core {
         db = Room.databaseBuilder(context, WalletsDatabase.class, "wallets_db")
                 .allowMainThreadQueries()
                 .build();
+        if (db.getWalletDao().isEmpty()) {
+            Wallet wallet = new Wallet(BigDecimal.ZERO, Currency.RUBLE,
+                    context.getResources().getString(R.string.title_wallet_init), WalletType.CASH);
+            WalletEntity walletEntity = WalletEntityMapper.transformToEntity(wallet);
+            db.getWalletDao().addWallet(walletEntity);
+        }
     }
 
     public void initApi() {

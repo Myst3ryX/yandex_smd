@@ -4,14 +4,12 @@ import android.app.Application;
 import android.content.Context;
 import android.content.res.Resources;
 
-import com.sergon146.business.repository.BalanceRepository;
 import com.sergon146.business.repository.ExchangeRepository;
 import com.sergon146.business.repository.TransactionRepository;
 import com.sergon146.business.repository.WalletRepository;
 import com.sergon146.core.Core;
 import com.sergon146.core.api.ApiService;
 import com.sergon146.core.db.WalletsDatabase;
-import com.sergon146.core.repository.BalanceRepositoryImpl;
 import com.sergon146.core.repository.ExchangeRepositoryImpl;
 import com.sergon146.core.repository.TransactionRepositoryImpl;
 import com.sergon146.core.repository.WalletRepositoryImpl;
@@ -48,12 +46,6 @@ public abstract class AppModule {
     @Provides
     static WalletsDatabase provideDatabase() {
         return Core.getDatabase();
-    }
-
-    @Singleton
-    @Provides
-    static BalanceRepository provideBalanceRepository(ApiService apiService) {
-        return new BalanceRepositoryImpl(apiService);
     }
 
     @Singleton

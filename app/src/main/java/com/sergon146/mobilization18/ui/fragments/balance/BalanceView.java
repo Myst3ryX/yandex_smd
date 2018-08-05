@@ -10,7 +10,8 @@ import java.util.List;
 
 @StateStrategyType(AddToEndSingleStrategy.class)
 public interface BalanceView extends BaseMvpView {
-    void showBalance(Balance wallets);
+
+    void showBalance(Balance totalBalance);
 
     void showWallets(List<Wallet> wallets);
 }

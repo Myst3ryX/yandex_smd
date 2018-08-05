@@ -17,6 +17,7 @@ public class Transaction {
     private Date date;
     private TransactionCategory category;
     private Long walletId;
+    private String walletName;
 
     public Transaction(Long id, OperationType type, Currency currency,
                        BigDecimal amount, BigDecimal exchangeRate, Date date,
@@ -73,5 +74,9 @@ public class Transaction {
 
     public Long getWalletId() {
         return walletId;
+    }
+
+    public String getWalletName() {
+        return walletName;
     }
 }

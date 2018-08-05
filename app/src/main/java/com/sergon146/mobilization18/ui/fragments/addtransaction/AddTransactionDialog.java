@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.arellomobile.mvp.presenter.ProvidePresenter;
+import com.sergon146.business.model.ExchangeRate;
 import com.sergon146.business.model.Transaction;
 import com.sergon146.business.model.Wallet;
 import com.sergon146.business.model.types.Currency;
@@ -57,6 +58,9 @@ public class AddTransactionDialog extends BaseDialogMvpFragment<AddTransactionPr
     NiceSpinner categorySpinner;
     @BindView(R.id.money_edit)
     EasyMoneyEditText moneyEdit;
+
+    List<Wallet> wallets = new ArrayList<>();
+    ExchangeRate rate;
 
     public static AddTransactionDialog newInstance() {
         return new AddTransactionDialog();
@@ -120,7 +124,13 @@ public class AddTransactionDialog extends BaseDialogMvpFragment<AddTransactionPr
     }
 
     @Override
+    public void showExchangeRate(ExchangeRate rate) {
+        this.rate = rate;
+    }
+
+    @Override
     public void showWallets(List<Wallet> wallets) {
+        this.wallets = wallets;
         List<String> walletsTitles = new ArrayList<>();
         for (Wallet wallet : wallets) {
             walletsTitles.add(getString(R.string.details, wallet.getName(),
@@ -135,20 +145,20 @@ public class AddTransactionDialog extends BaseDialogMvpFragment<AddTransactionPr
             Toast.makeText(getContext(), getString(R.string.empty_amount_toast),
                     Toast.LENGTH_SHORT).show();
         } else {
-            OperationType operType = expaseRadio.isChecked()
+            OperationType operationType = expaseRadio.isChecked()
                     ? OperationType.EXPENSE
                     : OperationType.INCOME;
 
             Currency currency = Currency.values()[currencySpinner.getSelectedIndex()];
-            Long walletId = (long) walletSpinner.getSelectedIndex() + 1;
+            Long walletId = wallets.get(walletSpinner.getSelectedIndex()).getId();
             TransactionCategory category =
                     TransactionCategory.values()[categorySpinner.getSelectedIndex()];
 
             BigDecimal amount = new BigDecimal(moneyEdit.getValueString());
-            BigDecimal exchange = BigDecimal.valueOf(35.6);
+            BigDecimal exchange = rate.getExchageRate();
             Date date = new Date();
 
-            Transaction transaction = new Transaction(operType, currency, amount,
+            Transaction transaction = new Transaction(operationType, currency, amount,
                     exchange, date, category, walletId);
 
             getPresenter().addTransaction(transaction);

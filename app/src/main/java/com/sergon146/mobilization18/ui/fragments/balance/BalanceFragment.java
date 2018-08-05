@@ -23,9 +23,7 @@ import com.sergon146.mobilization18.ui.fragments.balance.adapter.WalletFragmentA
 
 import org.fabiomsr.moneytextview.MoneyTextView;
 
-import java.math.BigDecimal;
 import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -100,13 +98,10 @@ public class BalanceFragment extends BaseMvpFragment<BalancePresenter>
     }
 
     @Override
-    public void showBalance(Balance balance) {
-        balanceView.setAmount(balance.getAmount().floatValue());
-        balanceView.setSymbol(balance.getCurrency().getSymbol());
-
-        Map<Currency, BigDecimal> exchangeMap = balance.getExchangeMap();
-        BigDecimal additional = exchangeMap.get(Currency.DOLLAR);
-        additionalBalance.setAmount(additional.floatValue());
+    public void showBalance(Balance totalBalance) {
+        balanceView.setAmount(totalBalance.getBalance(Currency.RUBLE).floatValue());
+        balanceView.setSymbol(Currency.RUBLE.getSymbol());
+        additionalBalance.setAmount(totalBalance.getBalance(Currency.DOLLAR).floatValue());
         additionalBalance.setSymbol(Currency.DOLLAR.getSymbol());
     }
 

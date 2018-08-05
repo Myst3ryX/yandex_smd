@@ -5,37 +5,26 @@ import com.sergon146.business.model.Balance;
 import com.sergon146.business.model.ExchangeRate;
 import com.sergon146.business.model.Transaction;
 import com.sergon146.business.model.Wallet;
-import com.sergon146.business.repository.BalanceRepository;
 import com.sergon146.business.repository.ExchangeRepository;
 import com.sergon146.business.repository.TransactionRepository;
 import com.sergon146.business.repository.WalletRepository;
 
-import java.math.BigDecimal;
-import java.util.Collections;
 import java.util.List;
 
 import io.reactivex.Observable;
 
 public class BalanceUseCaseImpl implements BalanceUseCase {
 
-    private final BalanceRepository balanceRepository;
     private final WalletRepository walletRepository;
     private final TransactionRepository transactionRepository;
     private final ExchangeRepository exchangeRepository;
 
-    public BalanceUseCaseImpl(BalanceRepository balanceRepository,
-                              WalletRepository walletRepository,
+    public BalanceUseCaseImpl(WalletRepository walletRepository,
                               TransactionRepository transactionRepository,
                               ExchangeRepository exchangeRepository) {
-        this.balanceRepository = balanceRepository;
         this.walletRepository = walletRepository;
         this.transactionRepository = transactionRepository;
         this.exchangeRepository = exchangeRepository;
-    }
-
-    @Override
-    public Observable<Balance> getBalance() {
-        return balanceRepository.getBalance();
     }
 
     @Override
@@ -49,8 +38,8 @@ public class BalanceUseCaseImpl implements BalanceUseCase {
     }
 
     @Override
-    public Observable<BigDecimal> getTransactionSum() {
-        return transactionRepository.getTransactionSum(Collections.emptyList());
+    public Observable<Balance> getWalletsBalanceSum(ExchangeRate rate) {
+        return walletRepository.getWalletsBalanceSum(rate);
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.sergon146.core.db.dao;
 
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Transaction;
@@ -31,5 +32,10 @@ public interface WalletDAO {
 
     @Delete
     void deleteWallet(WalletEntity wallet);
+
+    @Ignore
+    default boolean isEmpty() {
+        return getWallets().isEmpty();
+    }
 
 }

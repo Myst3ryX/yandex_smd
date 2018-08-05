@@ -14,6 +14,8 @@ public class ExchangeRate {
         this.exchageRate = BigDecimal.valueOf(Double.valueOf(val));
     }
 
+    public ExchangeRate() { }
+
     public String getIn() {
         return in;
     }

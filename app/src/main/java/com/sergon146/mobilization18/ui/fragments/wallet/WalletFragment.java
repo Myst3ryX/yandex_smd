@@ -92,7 +92,7 @@ public class WalletFragment extends BaseMvpFragment<WalletPresenter> implements 
 
         title.setText(wallet.getName());
         amount.setText(getResources().getString(R.string.amount,
-                CurrencyUtils.getAmoutText(wallet.getBalance()),
+                CurrencyUtils.getAmountText(wallet.getBalance()),
                 wallet.getCurrency().getSymbol()));
         type.setText(ItemUtils.getWalletTypeTitle(getContext(), wallet));
     }
