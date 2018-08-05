@@ -8,6 +8,7 @@ import java.util.List;
 import io.reactivex.Observable;
 
 public interface AddTransactionUseCase {
+
     Observable<List<Wallet>> getWallets();
 
     void addTransaction(Transaction transaction);

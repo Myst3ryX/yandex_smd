@@ -85,7 +85,6 @@ public class BalanceFragment extends BaseMvpFragment<BalancePresenter>
             public void onPageScrolled(int position,
                                        float positionOffset,
                                        int positionOffsetPixels) {
-
             }
 
             @Override

@@ -11,6 +11,7 @@ import java.util.List;
 import io.reactivex.Observable;
 
 public interface BalanceUseCase {
+
     Observable<Balance> getBalance();
 
     Observable<List<Wallet>> getWallets();

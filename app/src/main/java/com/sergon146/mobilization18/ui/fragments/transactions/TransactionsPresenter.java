@@ -18,7 +18,7 @@ public class TransactionsPresenter extends BasePresenter<TransactionsView> {
     @Override
     protected void onFirstViewAttach() {
         super.onFirstViewAttach();
-        bind(onUi(useCase.getTransactions()).subscribe(transactions ->
+        bind(onUi(useCase.getAllTransactions()).subscribe(transactions ->
                 getViewState().showTransactions(transactions)));
     }
 

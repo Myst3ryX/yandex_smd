@@ -1,9 +1,13 @@
 package com.sergon146.core;
 
+import android.arch.persistence.room.Room;
+import android.content.Context;
+
 import com.facebook.stetho.okhttp3.StethoInterceptor;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.sergon146.core.api.ApiService;
+import com.sergon146.core.db.WalletsDatabase;
 import com.sergon146.core.rx.RxThreadCallAdapter;
 
 import java.util.Collections;
@@ -24,9 +28,12 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class Core {
+
     private static Core instance;
     private ApiService apiService;
     private String endpoint;
+
+    private WalletsDatabase db;
 
     public static Core initInstance(String endpoint) {
         if (instance == null) {
@@ -39,6 +46,16 @@ public class Core {
 
     public static ApiService api() {
         return instance.apiService;
+    }
+
+    public static WalletsDatabase getDatabase() {
+        return instance.db;
+    }
+
+    public void initDb(Context context) {
+        db = Room.databaseBuilder(context, WalletsDatabase.class, "wallets_db")
+                .allowMainThreadQueries()
+                .build();
     }
 
     public void initApi() {

@@ -1,15 +1,16 @@
 package com.sergon146.core.repository;
 
 import com.sergon146.business.model.ExchangeRate;
-import com.sergon146.business.repository.ExchageRepository;
+import com.sergon146.business.repository.ExchangeRepository;
 import com.sergon146.core.api.ApiService;
 
 import io.reactivex.Observable;
 
-public class ExchageRepositoryImpl implements ExchageRepository {
+public class ExchangeRepositoryImpl implements ExchangeRepository {
+
     private final ApiService apiService;
 
-    public ExchageRepositoryImpl(ApiService apiService) {
+    public ExchangeRepositoryImpl(ApiService apiService) {
         this.apiService = apiService;
     }
 

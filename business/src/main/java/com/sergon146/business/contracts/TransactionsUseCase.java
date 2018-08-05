@@ -8,5 +8,6 @@ import java.util.List;
 import io.reactivex.Observable;
 
 public interface TransactionsUseCase {
-    Observable<List<Transaction>> getTransactions();
+
+    Observable<List<Transaction>> getAllTransactions();
 }

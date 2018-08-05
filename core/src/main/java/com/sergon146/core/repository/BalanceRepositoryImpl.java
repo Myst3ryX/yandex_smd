@@ -6,7 +6,6 @@ import com.sergon146.business.repository.BalanceRepository;
 import com.sergon146.core.api.ApiService;
 
 import java.math.BigDecimal;
-import java.util.Random;
 
 import io.reactivex.Observable;
 import io.reactivex.subjects.BehaviorSubject;
@@ -31,10 +30,8 @@ public class BalanceRepositoryImpl implements BalanceRepository {
     }
 
     private Balance getMockBalance() {
-        Random random = new Random();
-        Balance balance = new Balance(BigDecimal.valueOf(random.nextDouble() * 10000),
-                Currency.RUBLE);
-        balance.addExchange(Currency.DOLLAR, BigDecimal.valueOf(random.nextDouble() * 2000));
+        Balance balance = new Balance(BigDecimal.valueOf(10000), Currency.RUBLE);
+        balance.addExchange(Currency.DOLLAR, BigDecimal.valueOf(2000));
         return balance;
     }
 }

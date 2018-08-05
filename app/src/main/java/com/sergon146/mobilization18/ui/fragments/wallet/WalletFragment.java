@@ -21,16 +21,16 @@ import com.sergon146.mobilization18.util.CurrencyUtils;
 import com.sergon146.mobilization18.util.ItemUtils;
 
 import java.util.List;
-import java.util.UUID;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class WalletFragment extends BaseMvpFragment<WalletPresenter>
-        implements WalletView {
-    private static final String UUID_KEY = "UUID_KEY";
+public class WalletFragment extends BaseMvpFragment<WalletPresenter> implements WalletView {
+
+    private static final String WALLET_ID = "WALLET_ID";
+
     @Inject
     @InjectPresenter
     WalletPresenter presenter;
@@ -46,9 +46,9 @@ public class WalletFragment extends BaseMvpFragment<WalletPresenter>
 
     private TransactionAdapter transactionAdapter;
 
-    public static WalletFragment newInstance(UUID walletUuid) {
+    public static WalletFragment newInstance(Long id) {
         Bundle bundle = new Bundle();
-        bundle.putSerializable(UUID_KEY, walletUuid);
+        bundle.putLong(WALLET_ID, id);
         WalletFragment fragment = new WalletFragment();
         fragment.setArguments(bundle);
         return fragment;
@@ -65,9 +65,10 @@ public class WalletFragment extends BaseMvpFragment<WalletPresenter>
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+
         if (getArguments() != null) {
-            UUID uuid = (UUID) getArguments().getSerializable(UUID_KEY);
-            presenter.setUuid(uuid);
+            Long id = getArguments().getLong(WALLET_ID);
+            presenter.setId(id);
         }
 
         View root = inflater.inflate(R.layout.fragment_wallet, container, false);
@@ -91,7 +92,7 @@ public class WalletFragment extends BaseMvpFragment<WalletPresenter>
 
         title.setText(wallet.getName());
         amount.setText(getResources().getString(R.string.amount,
-                CurrencyUtils.getAmoutText(wallet.getAmount()),
+                CurrencyUtils.getAmoutText(wallet.getBalance()),
                 wallet.getCurrency().getSymbol()));
         type.setText(ItemUtils.getWalletTypeTitle(getContext(), wallet));
     }

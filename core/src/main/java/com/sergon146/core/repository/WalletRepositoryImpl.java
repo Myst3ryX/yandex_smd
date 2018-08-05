@@ -1,28 +1,31 @@
 package com.sergon146.core.repository;
 
+import com.sergon146.business.model.ExchangeRate;
 import com.sergon146.business.model.Wallet;
 import com.sergon146.business.model.types.Currency;
-import com.sergon146.business.model.types.WalletType;
 import com.sergon146.business.repository.WalletRepository;
+import com.sergon146.core.db.WalletsDatabase;
+import com.sergon146.core.mapper.WalletEntityMapper;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
-
-import javax.annotation.Nullable;
 
 import io.reactivex.Observable;
 import io.reactivex.subjects.BehaviorSubject;
 import io.reactivex.subjects.Subject;
 
 public class WalletRepositoryImpl implements WalletRepository {
-    private List<Wallet> wallets;
+
+    private final List<Wallet> wallets;
+    private final WalletsDatabase walletsDatabase;
     private Subject<List<Wallet>> walletsSubj = BehaviorSubject.create();
 
-    public WalletRepositoryImpl() {
-        wallets = getMockWallets();
+    public WalletRepositoryImpl(WalletsDatabase walletsDatabase) {
+        this.walletsDatabase = walletsDatabase;
+        this.wallets = getLocalWallets();
         walletsSubj.onNext(wallets);
+
+        initFirstWallets();
     }
 
     @Override
@@ -31,39 +34,38 @@ public class WalletRepositoryImpl implements WalletRepository {
     }
 
     @Override
-    @Nullable
-    public Observable<Wallet> getWallet(UUID uuid) {
-        for (Wallet wallet : wallets) {
-            if (wallet.getUuid().equals(uuid)) {
-                return Observable.just(wallet);
-            }
-        }
-
-        return null;
+    public Observable<Wallet> getWallet(long id) {
+        Wallet wallet = WalletEntityMapper.transformFromEntity(walletsDatabase.getWalletDao().getWallet(id));
+        return Observable.just(wallet);
     }
 
-    private List<Wallet> getMockWallets() {
-        BigDecimal currentBalance = BigDecimal.valueOf(120036.00);
-        BigDecimal exchangeRate = BigDecimal.valueOf(63.60);
+    @Override
+    public long addWallet(Wallet wallet) {
+        return walletsDatabase.getWalletDao().addWallet(WalletEntityMapper.transformToEntity(wallet));
+    }
 
-        List<Wallet> wallets = new ArrayList<>();
-        Wallet rub = new Wallet(currentBalance, Currency.RUBLE,
-                "Наличка", WalletType.CASH);
-        Wallet usd = new Wallet(currentBalance.divide(exchangeRate, 1), Currency.DOLLAR,
-                "Сбер", WalletType.DEBIT_CARD);
-        Wallet rub1 = new Wallet(currentBalance.divide(BigDecimal.valueOf(1.3), 1), Currency.RUBLE,
-                "Клюква", WalletType.DEBIT_CARD);
-        Wallet usd1 = new Wallet(currentBalance.multiply(exchangeRate), Currency.DOLLAR,
-                "Сбербанк", WalletType.CREDIT_CARD);
-        Wallet rub2 = new Wallet(currentBalance.divide(BigDecimal.valueOf(1.3), 1), Currency.RUBLE,
-                "Клюква", WalletType.DEBIT_CARD);
-        Wallet usd2 = new Wallet(currentBalance.multiply(exchangeRate), Currency.DOLLAR,
-                "Сбербанк", WalletType.CREDIT_CARD);
+    @Override
+    public Observable<BigDecimal> getWalletsBalanceSum(List<Wallet> wallets, ExchangeRate rate) {
+        BigDecimal sum = BigDecimal.ZERO;
+        for (Wallet wallet : wallets) {
+            if (wallet.getCurrency().equals(Currency.RUBLE)) {
+                sum = sum.add(wallet.getBalance());
+            } else
+                sum = sum.add(wallet.getBalance().multiply(rate.getExchageRate()));
+        }
+        return Observable.just(sum);
+    }
 
-        wallets.add(rub);
-        wallets.add(usd);
-        wallets.add(rub1);
-        wallets.add(usd1);
-        return wallets;
+    private List<Wallet> getLocalWallets() {
+        return WalletEntityMapper.transformFromEntities(walletsDatabase.getWalletDao().getWallets());
+    }
+
+    private void initFirstWallets() {
+//        long id = addWallet(new Wallet(BigDecimal.ZERO, Currency.RUBLE, "Наличка", WalletType.CASH));
+//        Log.w("WalletRepositoryImpl", String.valueOf(id));
+//        id = addWallet(new Wallet(BigDecimal.ZERO, Currency.DOLLAR, "Сбербанк", WalletType.DEBIT_CARD));
+//        Log.w("WalletRepositoryImpl", String.valueOf(id));
+//        id = addWallet(new Wallet(BigDecimal.ZERO, Currency.RUBLE, "Халва", WalletType.CREDIT_CARD));
+//        Log.w("WalletRepositoryImpl", String.valueOf(id));
     }
 }

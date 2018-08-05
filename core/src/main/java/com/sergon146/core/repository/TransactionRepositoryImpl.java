@@ -4,7 +4,8 @@ import com.sergon146.business.model.Transaction;
 import com.sergon146.business.model.types.Currency;
 import com.sergon146.business.model.types.OperationType;
 import com.sergon146.business.repository.TransactionRepository;
-import com.sergon146.core.api.ApiService;
+import com.sergon146.core.db.WalletsDatabase;
+import com.sergon146.core.mapper.TransactionEntityMapper;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -15,26 +16,36 @@ import io.reactivex.subjects.BehaviorSubject;
 import io.reactivex.subjects.Subject;
 
 public class TransactionRepositoryImpl implements TransactionRepository {
-    private final ApiService apiService;
+
+    private final WalletsDatabase walletsDatabase;
     private final Currency currentCurrency = Currency.RUBLE;
 
     private List<Transaction> transactions;
     private Subject<List<Transaction>> transactionSubj = BehaviorSubject.create();
 
-    public TransactionRepositoryImpl(ApiService apiService) {
-        this.apiService = apiService;
-
-        transactions = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            transactions.add(Transaction.getRandomTransaction());
-        }
-
+    public TransactionRepositoryImpl(WalletsDatabase walletsDatabase) {
+        this.walletsDatabase = walletsDatabase;
+        this.transactions = getTransactions();
         transactionSubj.onNext(transactions);
     }
 
     @Override
-    public Observable<List<Transaction>> getTransaction() {
+    public Observable<List<Transaction>> getAllTransactions() {
         return transactionSubj;
+    }
+
+    @Override
+    public Observable<List<Transaction>> getWalletTransactions(long walletId) {
+        Subject<List<Transaction>> walletTransactionsSubj = BehaviorSubject.create();
+        List<Transaction> walletTransactions = new ArrayList<>();
+        for (Transaction transaction : transactions) {
+            if (transaction.getWalletId() == walletId) {
+                walletTransactions.add(transaction);
+            }
+        }
+
+        walletTransactionsSubj.onNext(walletTransactions);
+        return walletTransactionsSubj;
     }
 
     @Override
@@ -60,7 +71,11 @@ public class TransactionRepositoryImpl implements TransactionRepository {
 
     @Override
     public void addTransaction(Transaction transaction) {
-        transactions.add(transaction);
-        transactionSubj.onNext(transactions);
+        walletsDatabase.getTransactionDao().addTransaction(TransactionEntityMapper.transformToEntity(transaction));
+        //transactionSubj.onNext(transactions);
+    }
+
+    private List<Transaction> getTransactions() {
+        return TransactionEntityMapper.transformFromEntities(walletsDatabase.getTransactionDao().getTransactions());
     }
 }

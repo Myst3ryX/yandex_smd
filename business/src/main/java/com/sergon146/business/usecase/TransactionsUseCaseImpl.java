@@ -6,7 +6,6 @@ import com.sergon146.business.repository.TransactionRepository;
 import com.sergon146.business.repository.WalletRepository;
 
 import java.util.List;
-import java.util.Random;
 
 import io.reactivex.Observable;
 
@@ -21,14 +20,7 @@ public class TransactionsUseCaseImpl implements TransactionsUseCase {
     }
 
     @Override
-    public Observable<List<Transaction>> getTransactions() {
-        return Observable.combineLatest(transactionRepository.getTransaction(),
-                walletRepository.getWallets(), (transactions, wallets) -> {
-                    Random random = new Random();
-                    for (Transaction transaction : transactions) {
-                        transaction.setWallet(wallets.get(random.nextInt(wallets.size())));
-                    }
-                    return transactions;
-                });
+    public Observable<List<Transaction>> getAllTransactions() {
+        return transactionRepository.getAllTransactions();
     }
 }

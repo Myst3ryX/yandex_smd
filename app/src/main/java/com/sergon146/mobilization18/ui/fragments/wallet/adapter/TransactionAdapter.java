@@ -99,10 +99,10 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
 
             card.setVisibility(View.GONE);
 
-            if (item.getWallet() != null && isShowWallet) {
-                card.setText(item.getWallet().getName());
-                card.setVisibility(View.VISIBLE);
-            }
+            //if (item.getWallet() != null && isShowWallet) {
+            //    card.setText(item.getWallet().getName());
+            //    card.setVisibility(View.VISIBLE);
+            //}
         }
     }
 }

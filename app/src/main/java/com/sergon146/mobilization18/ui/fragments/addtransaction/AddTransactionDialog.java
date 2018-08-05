@@ -29,6 +29,7 @@ import org.angmarch.views.NiceSpinner;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -137,10 +138,19 @@ public class AddTransactionDialog extends BaseDialogMvpFragment<AddTransactionPr
             OperationType operType = expaseRadio.isChecked()
                     ? OperationType.EXPENSE
                     : OperationType.INCOME;
+
             Currency currency = Currency.values()[currencySpinner.getSelectedIndex()];
-            BigDecimal amount = BigDecimal.valueOf(Double.valueOf(moneyEdit.getValueString()));
+            Long walletId = (long) walletSpinner.getSelectedIndex() + 1;
+            TransactionCategory category =
+                    TransactionCategory.values()[categorySpinner.getSelectedIndex()];
+
+            BigDecimal amount = new BigDecimal(moneyEdit.getValueString());
             BigDecimal exchange = BigDecimal.valueOf(35.6);
-            Transaction transaction = new Transaction(operType, currency, amount, exchange);
+            Date date = new Date();
+
+            Transaction transaction = new Transaction(operType, currency, amount,
+                    exchange, date, category, walletId);
+
             getPresenter().addTransaction(transaction);
             showGotcha();
             dismiss();

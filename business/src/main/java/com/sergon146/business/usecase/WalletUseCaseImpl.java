@@ -8,7 +8,6 @@ import com.sergon146.business.repository.TransactionRepository;
 import com.sergon146.business.repository.WalletRepository;
 
 import java.util.List;
-import java.util.UUID;
 
 import io.reactivex.Observable;
 
@@ -26,12 +25,14 @@ public class WalletUseCaseImpl implements WalletUseCase {
     }
 
     @Override
-    public Observable<Wallet> getWallet(UUID uuid) {
-        return walletRepository.getWallet(uuid);
+    public Observable<Wallet> getWallet(long id) {
+        return walletRepository.getWallet(id);
     }
 
     @Override
-    public Observable<List<Transaction>> getWalletTransactions(UUID uuid) {
-        return transactionRepository.getTransaction();
+    public Observable<List<Transaction>> getWalletTransactions(long id) {
+        return transactionRepository.getWalletTransactions(id);
     }
+
+
 }

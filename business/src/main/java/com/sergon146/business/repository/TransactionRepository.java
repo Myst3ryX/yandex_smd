@@ -8,7 +8,10 @@ import java.util.List;
 import io.reactivex.Observable;
 
 public interface TransactionRepository {
-    Observable<List<Transaction>> getTransaction();
+
+    Observable<List<Transaction>> getAllTransactions();
+
+    Observable<List<Transaction>> getWalletTransactions(long walletId);
 
     Observable<BigDecimal> getTransactionSum(List<Transaction> transactions);
 
