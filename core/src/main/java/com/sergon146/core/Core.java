@@ -11,7 +11,6 @@ import com.sergon146.business.model.types.Currency;
 import com.sergon146.business.model.types.WalletType;
 import com.sergon146.core.api.ApiService;
 import com.sergon146.core.db.WalletsDatabase;
-import com.sergon146.core.db.entity.WalletEntity;
 import com.sergon146.core.mapper.WalletEntityMapper;
 import com.sergon146.core.rx.RxThreadCallAdapter;
 
@@ -63,10 +62,15 @@ public class Core {
                 .allowMainThreadQueries()
                 .build();
         if (db.getWalletDao().isEmpty()) {
-            Wallet wallet = new Wallet(BigDecimal.ZERO, Currency.RUBLE,
-                    context.getResources().getString(R.string.title_wallet_init), WalletType.CASH);
-            WalletEntity walletEntity = WalletEntityMapper.transformToEntity(wallet);
-            db.getWalletDao().addWallet(walletEntity);
+            Wallet walletCash = new Wallet(BigDecimal.ZERO, Currency.RUBLE,
+                    context.getResources().getString(R.string.title_wallet_cash), WalletType.CASH);
+            Wallet walletDebit = new Wallet(BigDecimal.ZERO, Currency.DOLLAR,
+                    context.getResources().getString(R.string.title_wallet_debit), WalletType.DEBIT_CARD);
+            Wallet walletCredit = new Wallet(BigDecimal.ZERO, Currency.RUBLE,
+                    context.getResources().getString(R.string.title_wallet_credit), WalletType.CREDIT_CARD);
+            db.getWalletDao().addWallet(WalletEntityMapper.transformToEntity(walletCash));
+            db.getWalletDao().addWallet(WalletEntityMapper.transformToEntity(walletDebit));
+            db.getWalletDao().addWallet(WalletEntityMapper.transformToEntity(walletCredit));
         }
     }
 

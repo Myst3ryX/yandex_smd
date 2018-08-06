@@ -11,6 +11,7 @@ import com.sergon146.business.repository.WalletRepository;
 
 import java.util.List;
 
+import io.reactivex.Flowable;
 import io.reactivex.Observable;
 
 public class BalanceUseCaseImpl implements BalanceUseCase {
@@ -28,17 +29,17 @@ public class BalanceUseCaseImpl implements BalanceUseCase {
     }
 
     @Override
-    public Observable<List<Wallet>> getWallets() {
+    public Flowable<List<Wallet>> getWallets() {
         return walletRepository.getWallets();
     }
 
     @Override
-    public Observable<List<Transaction>> getTransactions() {
+    public Flowable<List<Transaction>> getTransactions() {
         return transactionRepository.getAllTransactions();
     }
 
     @Override
-    public Observable<Balance> getWalletsBalanceSum(ExchangeRate rate) {
+    public Flowable<Balance> getWalletsBalanceSum(ExchangeRate rate) {
         return walletRepository.getWalletsBalanceSum(rate);
     }
 

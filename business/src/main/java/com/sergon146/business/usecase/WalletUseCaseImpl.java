@@ -8,7 +8,7 @@ import com.sergon146.business.repository.WalletRepository;
 
 import java.util.List;
 
-import io.reactivex.Observable;
+import io.reactivex.Flowable;
 
 public class WalletUseCaseImpl implements WalletUseCase {
     private final TransactionRepository transactionRepository;
@@ -21,12 +21,12 @@ public class WalletUseCaseImpl implements WalletUseCase {
     }
 
     @Override
-    public Observable<Wallet> getWallet(long id) {
+    public Flowable<Wallet> getWallet(long id) {
         return walletRepository.getWallet(id);
     }
 
     @Override
-    public Observable<List<Transaction>> getWalletTransactions(long id) {
+    public Flowable<List<Transaction>> getWalletTransactions(long id) {
         return transactionRepository.getWalletTransactions(id);
     }
 

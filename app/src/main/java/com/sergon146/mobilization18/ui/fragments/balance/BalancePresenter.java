@@ -7,6 +7,8 @@ import com.sergon146.business.contracts.BalanceUseCase;
 import com.sergon146.mobilization18.navigation.MainRouter;
 import com.sergon146.mobilization18.ui.base.BasePresenter;
 
+import io.reactivex.BackpressureStrategy;
+
 @InjectViewState
 public class BalancePresenter extends BasePresenter<BalanceView> {
 
@@ -23,7 +25,8 @@ public class BalancePresenter extends BasePresenter<BalanceView> {
 
         getExchangeRate();
 
-        bind(onUi(useCase.getExchangeRate().flatMap(useCase::getWalletsBalanceSum))
+        bind(onUi(useCase.getExchangeRate().toFlowable(BackpressureStrategy.BUFFER)
+                .flatMap(useCase::getWalletsBalanceSum))
                 .subscribe(bal -> getViewState().showBalance(bal)));
 
         bind(onUi(useCase.getWallets())

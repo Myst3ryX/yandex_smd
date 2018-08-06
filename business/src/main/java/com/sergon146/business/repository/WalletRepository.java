@@ -7,15 +7,15 @@ import com.sergon146.business.model.Wallet;
 
 import java.util.List;
 
-import io.reactivex.Observable;
+import io.reactivex.Flowable;
 
 public interface WalletRepository {
 
-    Observable<List<Wallet>> getWallets();
+    Flowable<List<Wallet>> getWallets();
 
-    Observable<Wallet> getWallet(long id);
+    Flowable<Wallet> getWallet(long id);
 
-    Observable<Balance> getWalletsBalanceSum(ExchangeRate rate);
+    Flowable<Balance> getWalletsBalanceSum(ExchangeRate rate);
 
     void applyWalletTransaction(long id, Transaction transaction);
 

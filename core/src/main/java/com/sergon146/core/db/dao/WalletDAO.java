@@ -13,16 +13,24 @@ import com.sergon146.core.db.entity.WalletWithTransactions;
 
 import java.util.List;
 
+import io.reactivex.Flowable;
+
 @Dao
 public interface WalletDAO {
 
     @Transaction
     @Query("select * from wallet")
-    List<WalletWithTransactions> getWallets();
+    Flowable<List<WalletWithTransactions>> getWalletsWithTransactions();
 
     @Transaction
     @Query("select * from wallet where id = :id")
-    WalletWithTransactions getWallet(long id);
+    Flowable<WalletWithTransactions> getWalletWithTransactions(long id);
+
+    @Query("select * from wallet")
+    List<WalletEntity> getWallets();
+
+    @Query("select * from wallet where id = :id")
+    WalletEntity getWallet(long id);
 
     @Insert
     long addWallet(WalletEntity wallet);
@@ -37,5 +45,4 @@ public interface WalletDAO {
     default boolean isEmpty() {
         return getWallets().isEmpty();
     }
-
 }

@@ -6,11 +6,12 @@ import com.sergon146.business.model.Wallet;
 
 import java.util.List;
 
+import io.reactivex.Flowable;
 import io.reactivex.Observable;
 
 public interface AddTransactionUseCase {
 
-    Observable<List<Wallet>> getWallets();
+    Flowable<List<Wallet>> getWallets();
 
     Observable<ExchangeRate> getExchangeRate();
 

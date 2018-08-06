@@ -7,15 +7,16 @@ import com.sergon146.business.model.Wallet;
 
 import java.util.List;
 
+import io.reactivex.Flowable;
 import io.reactivex.Observable;
 
 public interface BalanceUseCase {
 
-    Observable<List<Wallet>> getWallets();
+    Flowable<List<Wallet>> getWallets();
 
-    Observable<List<Transaction>> getTransactions();
+    Flowable<List<Transaction>> getTransactions();
 
-    Observable<Balance> getWalletsBalanceSum(ExchangeRate rate);
+    Flowable<Balance> getWalletsBalanceSum(ExchangeRate rate);
 
     Observable<ExchangeRate> getExchangeRate();
 }

@@ -5,11 +5,11 @@ import com.sergon146.business.model.Wallet;
 
 import java.util.List;
 
-import io.reactivex.Observable;
+import io.reactivex.Flowable;
 
 public interface WalletUseCase {
 
-    Observable<Wallet> getWallet(long id);
+    Flowable<Wallet> getWallet(long id);
 
-    Observable<List<Transaction>> getWalletTransactions(long id);
+    Flowable<List<Transaction>> getWalletTransactions(long id);
 }

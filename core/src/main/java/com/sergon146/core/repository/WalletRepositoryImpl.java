@@ -4,87 +4,58 @@ import com.sergon146.business.model.Balance;
 import com.sergon146.business.model.ExchangeRate;
 import com.sergon146.business.model.Transaction;
 import com.sergon146.business.model.Wallet;
-import com.sergon146.business.model.types.Currency;
-import com.sergon146.business.model.types.OperationType;
 import com.sergon146.business.repository.WalletRepository;
 import com.sergon146.core.db.WalletsDatabase;
 import com.sergon146.core.db.entity.WalletEntity;
 import com.sergon146.core.mapper.WalletEntityMapper;
+import com.sergon146.core.utils.WalletCalculations;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
 import java.util.List;
 
-import io.reactivex.Observable;
-import io.reactivex.subjects.BehaviorSubject;
-import io.reactivex.subjects.Subject;
+import io.reactivex.Flowable;
 
 public class WalletRepositoryImpl implements WalletRepository {
 
     private final WalletsDatabase walletsDatabase;
+    private final WalletCalculations walletCalculations;
 
-    public WalletRepositoryImpl(WalletsDatabase walletsDatabase) {
+    public WalletRepositoryImpl(WalletsDatabase walletsDatabase,
+                                WalletCalculations walletCalculations) {
         this.walletsDatabase = walletsDatabase;
+        this.walletCalculations = walletCalculations;
     }
 
     @Override
-    public Observable<List<Wallet>> getWallets() {
-        Subject<List<Wallet>> walletsSubj = BehaviorSubject.create();
-        List<Wallet> wallets = getLocalWallets();
-        walletsSubj.onNext(wallets);
-        return walletsSubj;
+    public Flowable<List<Wallet>> getWallets() {
+        return walletsDatabase.getWalletDao()
+                .getWalletsWithTransactions()
+                .map(WalletEntityMapper::transformFromEntities);
     }
 
     @Override
-    public Observable<Wallet> getWallet(long id) {
-        return Observable.just(WalletEntityMapper.transformFromEntity(walletsDatabase.getWalletDao()
-                .getWallet(id)));
+    public Flowable<Wallet> getWallet(long id) {
+        return walletsDatabase.getWalletDao()
+                .getWalletWithTransactions(id)
+                .map(WalletEntityMapper::transformFromEntity);
     }
 
     @Override
     public long addWallet(Wallet wallet) {
-        return walletsDatabase.getWalletDao().addWallet(WalletEntityMapper.transformToEntity(wallet));
+        return walletsDatabase.getWalletDao()
+                .addWallet(WalletEntityMapper.transformToEntity(wallet));
     }
 
     @Override
-    public Observable<Balance> getWalletsBalanceSum(ExchangeRate rate) {
-        BigDecimal sum = BigDecimal.ZERO;
-        for (Wallet wallet : getLocalWallets()) {
-            sum = sum.add(getWalletBalance(WalletEntityMapper.transformToEntity(wallet),
-                    rate.getExchageRate()));
-        }
-
-        Balance balance = new Balance(new HashMap<>());
-        balance.addBalance(Currency.RUBLE, sum);
-        balance.addBalance(Currency.DOLLAR, sum.divide(rate.getExchageRate(),
-                BigDecimal.ROUND_HALF_EVEN));
-        return Observable.just(balance);
+    public Flowable<Balance> getWalletsBalanceSum(ExchangeRate rate) {
+        return getWallets().map((wallets) -> walletCalculations.getTotalBalance(wallets, rate));
     }
 
     @Override
     public void applyWalletTransaction(long id, Transaction transaction) {
-        WalletEntity wallet = walletsDatabase.getWalletDao().getWallet(id).wallet;
-        BigDecimal balance = getWalletBalance(wallet, transaction.getExchangeRate());
-
-        if (transaction.getType() == OperationType.INCOME) {
-            balance = balance.add(transaction.getAmount());
-        } else {
-            balance = balance.subtract(transaction.getAmount());
-        }
-
-        wallet.setBalance(balance);
+        WalletEntity wallet = walletsDatabase.getWalletDao().getWallet(id);
+        final BigDecimal newBalance = walletCalculations.performTransaction(wallet, transaction);
+        wallet.setBalance(newBalance);
         walletsDatabase.getWalletDao().updateWallet(wallet);
-    }
-
-    private BigDecimal getWalletBalance(WalletEntity wallet, BigDecimal exchangeRate) {
-        //todo fix
-        if (wallet.getCurrency() == Currency.RUBLE) {
-            return wallet.getBalance();
-        } else
-            return wallet.getBalance().multiply(exchangeRate);
-    }
-
-    private List<Wallet> getLocalWallets() {
-        return WalletEntityMapper.transformFromEntities(walletsDatabase.getWalletDao().getWallets());
     }
 }

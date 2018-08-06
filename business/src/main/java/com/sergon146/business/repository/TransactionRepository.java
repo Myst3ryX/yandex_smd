@@ -4,13 +4,13 @@ import com.sergon146.business.model.Transaction;
 
 import java.util.List;
 
-import io.reactivex.Observable;
+import io.reactivex.Flowable;
 
 public interface TransactionRepository {
 
-    Observable<List<Transaction>> getAllTransactions();
+    Flowable<List<Transaction>> getAllTransactions();
 
-    Observable<List<Transaction>> getWalletTransactions(long walletId);
+    Flowable<List<Transaction>> getWalletTransactions(long walletId);
 
     void addTransaction(Transaction transaction);
 }

@@ -9,14 +9,16 @@ import com.sergon146.core.db.entity.TransactionEntity;
 
 import java.util.List;
 
+import io.reactivex.Flowable;
+
 @Dao
 public interface TransactionDAO {
 
     @Query("select * from transactions")
-    List<TransactionEntity> getTransactions();
+    Flowable<List<TransactionEntity>> getAllTransactions();
 
-    @Query("select * from transactions where id = :id")
-    TransactionEntity getTransaction(long id);
+    @Query("select * from transactions where wallet_id = :walletId")
+    Flowable<List<TransactionEntity>> getWalletTransactions(long walletId);
 
     @Insert
     void addTransaction(TransactionEntity transaction);

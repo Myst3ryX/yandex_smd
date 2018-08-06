@@ -13,6 +13,7 @@ import com.sergon146.core.db.WalletsDatabase;
 import com.sergon146.core.repository.ExchangeRepositoryImpl;
 import com.sergon146.core.repository.TransactionRepositoryImpl;
 import com.sergon146.core.repository.WalletRepositoryImpl;
+import com.sergon146.core.utils.WalletCalculations;
 import com.sergon146.mobilization18.ui.main.MainActivity;
 
 import javax.inject.Singleton;
@@ -56,14 +57,21 @@ public abstract class AppModule {
 
     @Singleton
     @Provides
-    static WalletRepository provideWalletRepository(WalletsDatabase walletsDatabase) {
-        return new WalletRepositoryImpl(walletsDatabase);
+    static WalletRepository provideWalletRepository(WalletsDatabase walletsDatabase,
+                                                    WalletCalculations walletCalculations) {
+        return new WalletRepositoryImpl(walletsDatabase, walletCalculations);
     }
 
     @Singleton
     @Provides
     static ExchangeRepository provideExchangeRepository(ApiService apiService) {
         return new ExchangeRepositoryImpl(apiService);
+    }
+
+    @Singleton
+    @Provides
+    static WalletCalculations provideWalletCalculations() {
+        return new WalletCalculations();
     }
 
     @ContributesAndroidInjector(modules = {MainModule.class})
