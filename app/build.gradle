@@ -102,6 +102,9 @@ dependencies {
     annotationProcessor "android.arch.persistence.room:compiler:${ROOM_VERSION}"
     testImplementation "android.arch.persistence.room:testing:${ROOM_VERSION}"
 
+    //worker
+    implementation 'android.arch.work:work-runtime:1.0.0-alpha06'
+
     // tooling and testing
     androidTestImplementation("com.android.support.test:runner:${TEST_RUNNER_VERSION}") {
         exclude group: 'com.android.support', module: 'support-annotations'

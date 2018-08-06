@@ -81,4 +81,8 @@
     <string name="amount">%1$s %2$s</string>
     <string name="details">%1$s (%2$s)</string>
     <!--Utils-->
+
+    <string name="repeat_title">Repeat</string>
+    <string name="repeat_weekly">7 days</string>
+    <string name="repeat_monthly">30 days</string>
 </resources>

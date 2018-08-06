@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.Toast;
@@ -20,6 +21,7 @@ import com.sergon146.business.model.Wallet;
 import com.sergon146.business.model.types.Currency;
 import com.sergon146.business.model.types.OperationType;
 import com.sergon146.business.model.types.TransactionCategory;
+import com.sergon146.core.utils.WorkerConst;
 import com.sergon146.mobilization18.R;
 import com.sergon146.mobilization18.di.base.Injectable;
 import com.sergon146.mobilization18.ui.base.dialog.BaseDialogMvpFragment;
@@ -35,6 +37,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import androidx.work.Data;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -58,6 +61,10 @@ public class AddTransactionDialog extends BaseDialogMvpFragment<AddTransactionPr
     NiceSpinner categorySpinner;
     @BindView(R.id.money_edit)
     EasyMoneyEditText moneyEdit;
+    @BindView(R.id.cb_repeat_weekly)
+    CheckBox weeklyCheck;
+    @BindView(R.id.cb_repeat_monthly)
+    CheckBox monthlyCheck;
 
     List<Wallet> wallets = new ArrayList<>();
     ExchangeRate rate;
@@ -148,20 +155,32 @@ public class AddTransactionDialog extends BaseDialogMvpFragment<AddTransactionPr
             OperationType operationType = expaseRadio.isChecked()
                     ? OperationType.EXPENSE
                     : OperationType.INCOME;
-
             Currency currency = Currency.values()[currencySpinner.getSelectedIndex()];
             Long walletId = wallets.get(walletSpinner.getSelectedIndex()).getId();
             TransactionCategory category =
                     TransactionCategory.values()[categorySpinner.getSelectedIndex()];
-
             BigDecimal amount = new BigDecimal(moneyEdit.getValueString());
             BigDecimal exchange = rate.getExchageRate();
-            Date date = new Date();
 
-            Transaction transaction = new Transaction(operationType, currency, amount,
-                    exchange, date, category, walletId);
+            Data data = new Data.Builder()
+                    .putString(WorkerConst.TYPE, operationType.toString())
+                    .putString(WorkerConst.CURRENCY, currency.toString())
+                    .putString(WorkerConst.AMOUNT, amount.toString())
+                    .putString(WorkerConst.EXCHANGE_RATE, exchange.toString())
+                    .putString(WorkerConst.CATEGORY, category.toString())
+                    .putLong(WorkerConst.WALLET_ID, walletId)
+                    .build();
 
-            getPresenter().addTransaction(transaction);
+            if (weeklyCheck.isChecked()) {
+                getPresenter().addWeeklyTransaction(data);
+            } else if (monthlyCheck.isChecked()) {
+                getPresenter().addMonthlyTransaction(data);
+            } else {
+                Transaction transaction = new Transaction(operationType, currency, amount,
+                        exchange, new Date(), category, walletId);
+                getPresenter().addTransaction(transaction);
+            }
+
             showGotcha();
             dismiss();
         }
