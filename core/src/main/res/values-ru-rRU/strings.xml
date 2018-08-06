@@ -1,0 +1,5 @@
+<resources>
+    <string name="title_wallet_cash">Наличные</string>
+    <string name="title_wallet_debit">Карта #1</string>
+    <string name="title_wallet_credit">Карта #2</string>
+</resources>

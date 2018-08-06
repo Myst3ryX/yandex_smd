@@ -16,6 +16,7 @@ import org.fabiomsr.moneytextview.MoneyTextView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
@@ -45,6 +46,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
     }
 
     public void setTransactions(List<Transaction> transactions) {
+        Collections.reverse(transactions);
         this.transactionList.clear();
         this.transactionList.addAll(transactions);
         notifyDataSetChanged();
@@ -99,8 +101,8 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
 
             card.setVisibility(View.GONE);
 
-            if (item.getWallet() != null && isShowWallet) {
-                card.setText(item.getWallet().getName());
+            if (item.getWalletName() != null && isShowWallet) {
+                card.setText(String.valueOf(item.getWalletName()));
                 card.setVisibility(View.VISIBLE);
             }
         }

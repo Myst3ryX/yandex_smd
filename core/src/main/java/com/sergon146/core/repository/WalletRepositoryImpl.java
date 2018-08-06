@@ -1,69 +1,61 @@
 package com.sergon146.core.repository;
 
+import com.sergon146.business.model.Balance;
+import com.sergon146.business.model.ExchangeRate;
+import com.sergon146.business.model.Transaction;
 import com.sergon146.business.model.Wallet;
-import com.sergon146.business.model.types.Currency;
-import com.sergon146.business.model.types.WalletType;
 import com.sergon146.business.repository.WalletRepository;
+import com.sergon146.core.db.WalletsDatabase;
+import com.sergon146.core.db.entity.WalletEntity;
+import com.sergon146.core.mapper.WalletEntityMapper;
+import com.sergon146.core.utils.WalletCalculations;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
-import javax.annotation.Nullable;
-
-import io.reactivex.Observable;
-import io.reactivex.subjects.BehaviorSubject;
-import io.reactivex.subjects.Subject;
+import io.reactivex.Flowable;
 
 public class WalletRepositoryImpl implements WalletRepository {
-    private List<Wallet> wallets;
-    private Subject<List<Wallet>> walletsSubj = BehaviorSubject.create();
 
-    public WalletRepositoryImpl() {
-        wallets = getMockWallets();
-        walletsSubj.onNext(wallets);
+    private final WalletsDatabase walletsDatabase;
+    private final WalletCalculations walletCalculations;
+
+    public WalletRepositoryImpl(WalletsDatabase walletsDatabase,
+                                WalletCalculations walletCalculations) {
+        this.walletsDatabase = walletsDatabase;
+        this.walletCalculations = walletCalculations;
     }
 
     @Override
-    public Observable<List<Wallet>> getWallets() {
-        return walletsSubj;
+    public Flowable<List<Wallet>> getWallets() {
+        return walletsDatabase.getWalletDao()
+                .getWalletsWithTransactions()
+                .map(WalletEntityMapper::transformFromEntities);
     }
 
     @Override
-    @Nullable
-    public Observable<Wallet> getWallet(UUID uuid) {
-        for (Wallet wallet : wallets) {
-            if (wallet.getUuid().equals(uuid)) {
-                return Observable.just(wallet);
-            }
-        }
-
-        return null;
+    public Flowable<Wallet> getWallet(long id) {
+        return walletsDatabase.getWalletDao()
+                .getWalletWithTransactions(id)
+                .map(WalletEntityMapper::transformFromEntity);
     }
 
-    private List<Wallet> getMockWallets() {
-        BigDecimal currentBalance = BigDecimal.valueOf(120036.00);
-        BigDecimal exchangeRate = BigDecimal.valueOf(63.60);
+    @Override
+    public long addWallet(Wallet wallet) {
+        return walletsDatabase.getWalletDao()
+                .addWallet(WalletEntityMapper.transformToEntity(wallet));
+    }
 
-        List<Wallet> wallets = new ArrayList<>();
-        Wallet rub = new Wallet(currentBalance, Currency.RUBLE,
-                "Наличка", WalletType.CASH);
-        Wallet usd = new Wallet(currentBalance.divide(exchangeRate, 1), Currency.DOLLAR,
-                "Сбер", WalletType.DEBIT_CARD);
-        Wallet rub1 = new Wallet(currentBalance.divide(BigDecimal.valueOf(1.3), 1), Currency.RUBLE,
-                "Клюква", WalletType.DEBIT_CARD);
-        Wallet usd1 = new Wallet(currentBalance.multiply(exchangeRate), Currency.DOLLAR,
-                "Сбербанк", WalletType.CREDIT_CARD);
-        Wallet rub2 = new Wallet(currentBalance.divide(BigDecimal.valueOf(1.3), 1), Currency.RUBLE,
-                "Клюква", WalletType.DEBIT_CARD);
-        Wallet usd2 = new Wallet(currentBalance.multiply(exchangeRate), Currency.DOLLAR,
-                "Сбербанк", WalletType.CREDIT_CARD);
+    @Override
+    public Flowable<Balance> getWalletsBalanceSum(ExchangeRate rate) {
+        return getWallets().map((wallets) -> walletCalculations.getTotalBalance(wallets, rate));
+    }
 
-        wallets.add(rub);
-        wallets.add(usd);
-        wallets.add(rub1);
-        wallets.add(usd1);
-        return wallets;
+    @Override
+    public void applyWalletTransaction(long id, Transaction transaction) {
+        WalletEntity wallet = walletsDatabase.getWalletDao().getWallet(id);
+        final BigDecimal newBalance = walletCalculations.performTransaction(wallet, transaction);
+        wallet.setBalance(newBalance);
+        walletsDatabase.getWalletDao().updateWallet(wallet);
     }
 }

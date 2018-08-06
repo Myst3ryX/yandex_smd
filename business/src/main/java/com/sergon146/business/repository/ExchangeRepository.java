@@ -5,6 +5,7 @@ import com.sergon146.business.model.ExchangeRate;
 import io.reactivex.Observable;
 
 
-public interface ExchageRepository {
+public interface ExchangeRepository {
+
     Observable<ExchangeRate> getExchangeRate(String in, String out);
 }

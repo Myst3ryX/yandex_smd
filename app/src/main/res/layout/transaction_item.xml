@@ -22,7 +22,7 @@
 
         <TextView
             android:id="@+id/title"
-            style="@style/TextStyleDark"
+            style="@style/TextStyleDark.Bold"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
@@ -57,7 +57,7 @@
             android:layout_height="wrap_content"
             android:gravity="end|center"
             android:textSize="20sp"
-            app:amount="2324.44"
+            app:amount="0.00"
             app:baseTextColor="@color/income"
             app:decimalDigitsTextSize="14sp"
             app:decimalGravity="bottom"

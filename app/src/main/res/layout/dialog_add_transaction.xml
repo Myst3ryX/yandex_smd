@@ -3,15 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true"
-    >
+    android:fillViewport="true">
 
     <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/main_gradient_bg"
-        >
+        android:background="@drawable/main_gradient_bg">
 
         <TextView
             android:id="@+id/currency_title2"
@@ -19,16 +17,15 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:paddingLeft="16dp"
-            android:paddingTop="16dp"
-            android:paddingRight="16dp"
             android:paddingBottom="4dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingTop="16dp"
             android:text="@string/amount_title"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <com.wajahatkarim3.easymoneywidgets.EasyMoneyEditText
             android:id="@+id/money_edit"
@@ -48,9 +45,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/currency_title2"
-            app:show_commas="true"
-            app:show_currency="true"
-            />
+            app:show_commas="false"
+            app:show_currency="true" />
 
 
         <TextView
@@ -59,15 +55,14 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:paddingLeft="16dp"
-            android:paddingTop="16dp"
-            android:paddingRight="16dp"
             android:paddingBottom="4dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingTop="16dp"
             android:text="@string/operation_title"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/money_edit"
-            />
+            app:layout_constraintTop_toBottomOf="@+id/money_edit" />
 
         <RadioGroup
             android:id="@+id/type_radio"
@@ -76,8 +71,7 @@
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/type_title"
-            >
+            app:layout_constraintTop_toBottomOf="@+id/type_title">
 
             <RadioButton
                 android:id="@+id/radio_expanse"
@@ -93,8 +87,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/radio_income"
-                app:layout_constraintTop_toBottomOf="@+id/type_title"
-                />
+                app:layout_constraintTop_toBottomOf="@+id/type_title" />
 
             <RadioButton
                 android:id="@+id/radio_income"
@@ -110,8 +103,7 @@
                 app:layout_constraintEnd_toStartOf="@+id/radio_expanse"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/type_title"
-                />
+                app:layout_constraintTop_toBottomOf="@+id/type_title" />
 
         </RadioGroup>
 
@@ -121,16 +113,15 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:paddingLeft="16dp"
-            android:paddingTop="16dp"
-            android:paddingRight="16dp"
             android:paddingBottom="4dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingTop="16dp"
             android:text="@string/currency_title"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/type_radio"
-            />
+            app:layout_constraintTop_toBottomOf="@+id/type_radio" />
 
         <org.angmarch.views.NiceSpinner
             android:id="@+id/currency_spinner"
@@ -138,8 +129,7 @@
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/currency_title"
-            />
+            app:layout_constraintTop_toBottomOf="@+id/currency_title" />
 
         <TextView
             android:id="@+id/currency_title3"
@@ -147,16 +137,15 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:paddingLeft="16dp"
-            android:paddingTop="16dp"
-            android:paddingRight="16dp"
             android:paddingBottom="4dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingTop="16dp"
             android:text="@string/wallet_title"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/currency_spinner"
-            />
+            app:layout_constraintTop_toBottomOf="@+id/currency_spinner" />
 
         <org.angmarch.views.NiceSpinner
             android:id="@+id/wallet_spinner"
@@ -166,8 +155,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/currency_title3"
-            />
+            app:layout_constraintTop_toBottomOf="@+id/currency_title3" />
 
         <TextView
             android:id="@+id/catrgory_title"
@@ -176,27 +164,65 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:gravity="center"
-            android:paddingLeft="16dp"
-            android:paddingTop="16dp"
-            android:paddingRight="16dp"
             android:paddingBottom="4dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingTop="8dp"
             android:text="@string/category_title"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/wallet_spinner"
-            />
+            app:layout_constraintTop_toBottomOf="@+id/wallet_spinner" />
 
         <org.angmarch.views.NiceSpinner
             android:id="@+id/category_spinner"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
             android:layout_marginTop="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/catrgory_title"
-            />
+            app:layout_constraintTop_toBottomOf="@+id/catrgory_title" />
+
+        <TextView
+            android:id="@+id/tv_repeat_period_title"
+            style="@style/TextStyleLight.Bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:text="@string/repeat_title"
+            app:layout_constraintEnd_toStartOf="@id/cb_repeat_weekly"
+            app:layout_constraintHorizontal_weight=".4"
+            app:layout_constraintHorizontal_chainStyle="spread"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/category_spinner" />
+
+        <CheckBox
+            android:id="@+id/cb_repeat_weekly"
+            style="@style/TextStyleLight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/repeat_weekly"
+            app:layout_constraintBaseline_toBaselineOf="@id/tv_repeat_period_title"
+            app:layout_constraintHorizontal_weight=".25"
+            app:layout_constraintEnd_toStartOf="@id/cb_repeat_monthly"
+            app:layout_constraintStart_toEndOf="@id/tv_repeat_period_title"
+            app:layout_constraintTop_toBottomOf="@+id/category_spinner" />
+
+        <CheckBox
+            android:id="@+id/cb_repeat_monthly"
+            style="@style/TextStyleLight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/repeat_monthly"
+            app:layout_constraintHorizontal_weight=".35"
+            app:layout_constraintBaseline_toBaselineOf="@id/tv_repeat_period_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/cb_repeat_weekly"
+            app:layout_constraintTop_toBottomOf="@+id/category_spinner" />
 
         <TextView
             android:id="@+id/cancel"
@@ -210,26 +236,22 @@
             android:textSize="22sp"
             app:layout_constraintBottom_toBottomOf="@+id/accept"
             app:layout_constraintEnd_toStartOf="@+id/accept"
-            app:layout_constraintTop_toTopOf="@+id/accept"
-            />
+            app:layout_constraintTop_toTopOf="@+id/accept" />
 
         <TextView
             android:id="@+id/accept"
             style="@style/TextStyleLight"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
             android:layout_marginEnd="16dp"
             android:layout_marginRight="16dp"
-            android:layout_marginBottom="20dp"
             android:padding="16dp"
             android:text="@string/done"
             android:textSize="22sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/category_spinner"
-            app:layout_constraintVertical_bias="0.0"
-            />
+            app:layout_constraintTop_toBottomOf="@+id/cb_repeat_monthly"
+            app:layout_constraintVertical_bias="0.0" />
 
     </android.support.constraint.ConstraintLayout>
 </ScrollView>

@@ -4,12 +4,12 @@ import com.sergon146.business.model.Transaction;
 import com.sergon146.business.model.Wallet;
 
 import java.util.List;
-import java.util.UUID;
 
-import io.reactivex.Observable;
+import io.reactivex.Flowable;
 
 public interface WalletUseCase {
-    Observable<Wallet> getWallet(UUID uuid);
 
-    Observable<List<Transaction>> getWalletTransactions(UUID uuid);
+    Flowable<Wallet> getWallet(long id);
+
+    Flowable<List<Transaction>> getWalletTransactions(long id);
 }

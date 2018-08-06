@@ -1,66 +1,37 @@
 package com.sergon146.core.repository;
 
 import com.sergon146.business.model.Transaction;
-import com.sergon146.business.model.types.Currency;
-import com.sergon146.business.model.types.OperationType;
 import com.sergon146.business.repository.TransactionRepository;
-import com.sergon146.core.api.ApiService;
+import com.sergon146.core.db.WalletsDatabase;
+import com.sergon146.core.mapper.TransactionEntityMapper;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.Observable;
-import io.reactivex.subjects.BehaviorSubject;
-import io.reactivex.subjects.Subject;
+import io.reactivex.Flowable;
 
 public class TransactionRepositoryImpl implements TransactionRepository {
-    private final ApiService apiService;
-    private final Currency currentCurrency = Currency.RUBLE;
 
-    private List<Transaction> transactions;
-    private Subject<List<Transaction>> transactionSubj = BehaviorSubject.create();
+    private final WalletsDatabase walletsDatabase;
 
-    public TransactionRepositoryImpl(ApiService apiService) {
-        this.apiService = apiService;
-
-        transactions = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            transactions.add(Transaction.getRandomTransaction());
-        }
-
-        transactionSubj.onNext(transactions);
+    public TransactionRepositoryImpl(WalletsDatabase walletsDatabase) {
+        this.walletsDatabase = walletsDatabase;
     }
 
     @Override
-    public Observable<List<Transaction>> getTransaction() {
-        return transactionSubj;
+    public Flowable<List<Transaction>> getAllTransactions() {
+        return walletsDatabase.getTransactionDao().getAllTransactions()
+                .map(TransactionEntityMapper::transformFromEntities);
     }
 
     @Override
-    public Observable<BigDecimal> getTransactionSum(List<Transaction> transactions) {
-        BigDecimal sum = BigDecimal.ZERO;
-        for (Transaction transaction : transactions) {
-            BigDecimal amount;
-            if (currentCurrency.equals(transaction.getCurrency())) {
-                amount = transaction.getAmount();
-            } else {
-                amount = transaction.getAmount().divide(transaction.getExchangeRate(),
-                        BigDecimal.ROUND_HALF_UP);
-            }
-
-            if (transaction.getType() == OperationType.INCOME) {
-                sum = sum.add(amount);
-            } else {
-                sum = sum.subtract(amount);
-            }
-        }
-        return Observable.just(sum);
+    public Flowable<List<Transaction>> getWalletTransactions(long walletId) {
+        return walletsDatabase.getTransactionDao().getWalletTransactions(walletId)
+                .map(TransactionEntityMapper::transformFromEntities);
     }
 
     @Override
     public void addTransaction(Transaction transaction) {
-        transactions.add(transaction);
-        transactionSubj.onNext(transactions);
+        walletsDatabase.getTransactionDao()
+                .addTransaction(TransactionEntityMapper.transformToEntity(transaction));
     }
 }

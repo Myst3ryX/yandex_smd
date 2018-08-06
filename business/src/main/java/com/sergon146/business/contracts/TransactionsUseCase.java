@@ -5,8 +5,9 @@ import com.sergon146.business.model.Transaction;
 
 import java.util.List;
 
-import io.reactivex.Observable;
+import io.reactivex.Flowable;
 
 public interface TransactionsUseCase {
-    Observable<List<Transaction>> getTransactions();
+
+    Flowable<List<Transaction>> getAllTransactions();
 }

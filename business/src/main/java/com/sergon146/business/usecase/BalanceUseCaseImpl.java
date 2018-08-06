@@ -5,56 +5,46 @@ import com.sergon146.business.model.Balance;
 import com.sergon146.business.model.ExchangeRate;
 import com.sergon146.business.model.Transaction;
 import com.sergon146.business.model.Wallet;
-import com.sergon146.business.repository.BalanceRepository;
-import com.sergon146.business.repository.ExchageRepository;
+import com.sergon146.business.repository.ExchangeRepository;
 import com.sergon146.business.repository.TransactionRepository;
 import com.sergon146.business.repository.WalletRepository;
 
-import java.math.BigDecimal;
-import java.util.Collections;
 import java.util.List;
 
+import io.reactivex.Flowable;
 import io.reactivex.Observable;
 
 public class BalanceUseCaseImpl implements BalanceUseCase {
 
-    private final BalanceRepository balanceRepository;
     private final WalletRepository walletRepository;
     private final TransactionRepository transactionRepository;
-    private final ExchageRepository exchageRepository;
+    private final ExchangeRepository exchangeRepository;
 
-    public BalanceUseCaseImpl(BalanceRepository balanceRepository,
-                              WalletRepository walletRepository,
+    public BalanceUseCaseImpl(WalletRepository walletRepository,
                               TransactionRepository transactionRepository,
-                              ExchageRepository exchageRepository) {
-        this.balanceRepository = balanceRepository;
+                              ExchangeRepository exchangeRepository) {
         this.walletRepository = walletRepository;
         this.transactionRepository = transactionRepository;
-        this.exchageRepository = exchageRepository;
+        this.exchangeRepository = exchangeRepository;
     }
 
     @Override
-    public Observable<Balance> getBalance() {
-        return balanceRepository.getBalance();
-    }
-
-    @Override
-    public Observable<List<Wallet>> getWallets() {
+    public Flowable<List<Wallet>> getWallets() {
         return walletRepository.getWallets();
     }
 
     @Override
-    public Observable<List<Transaction>> getTransactions() {
-        return transactionRepository.getTransaction();
+    public Flowable<List<Transaction>> getTransactions() {
+        return transactionRepository.getAllTransactions();
     }
 
     @Override
-    public Observable<BigDecimal> getTransactionSum() {
-        return transactionRepository.getTransactionSum(Collections.<Transaction>emptyList());
+    public Flowable<Balance> getWalletsBalanceSum(ExchangeRate rate) {
+        return walletRepository.getWalletsBalanceSum(rate);
     }
 
     @Override
     public Observable<ExchangeRate> getExchangeRate() {
-        return exchageRepository.getExchangeRate("USD", "RUB");
+        return exchangeRepository.getExchangeRate("USD", "RUB");
     }
 }

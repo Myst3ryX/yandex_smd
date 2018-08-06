@@ -2,15 +2,15 @@ package com.sergon146.business.repository;
 
 import com.sergon146.business.model.Transaction;
 
-import java.math.BigDecimal;
 import java.util.List;
 
-import io.reactivex.Observable;
+import io.reactivex.Flowable;
 
 public interface TransactionRepository {
-    Observable<List<Transaction>> getTransaction();
 
-    Observable<BigDecimal> getTransactionSum(List<Transaction> transactions);
+    Flowable<List<Transaction>> getAllTransactions();
+
+    Flowable<List<Transaction>> getWalletTransactions(long walletId);
 
     void addTransaction(Transaction transaction);
 }

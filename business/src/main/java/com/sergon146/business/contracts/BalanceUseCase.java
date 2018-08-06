@@ -5,19 +5,18 @@ import com.sergon146.business.model.ExchangeRate;
 import com.sergon146.business.model.Transaction;
 import com.sergon146.business.model.Wallet;
 
-import java.math.BigDecimal;
 import java.util.List;
 
+import io.reactivex.Flowable;
 import io.reactivex.Observable;
 
 public interface BalanceUseCase {
-    Observable<Balance> getBalance();
 
-    Observable<List<Wallet>> getWallets();
+    Flowable<List<Wallet>> getWallets();
 
-    Observable<List<Transaction>> getTransactions();
+    Flowable<List<Transaction>> getTransactions();
 
-    Observable<BigDecimal> getTransactionSum();
+    Flowable<Balance> getWalletsBalanceSum(ExchangeRate rate);
 
     Observable<ExchangeRate> getExchangeRate();
 }

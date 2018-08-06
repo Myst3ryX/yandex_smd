@@ -6,75 +6,46 @@ import com.sergon146.business.model.types.TransactionCategory;
 
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.Random;
-import java.util.UUID;
 
 public class Transaction {
-    private UUID uuid;
+
+    private Long id;
     private OperationType type;
     private Currency currency;
     private BigDecimal amount;
     private BigDecimal exchangeRate;
     private Date date;
-    private TransactionCategory category = TransactionCategory.OTHER;
-    private Wallet wallet;
+    private TransactionCategory category;
+    private Long walletId;
+    private String walletName;
 
-    public Transaction(OperationType type,
-                       Currency currency,
-                       BigDecimal amount,
-                       BigDecimal exchangeRate) {
-        this.uuid = UUID.randomUUID();
-        this.type = type;
-        this.currency = currency;
-        this.amount = amount;
-        this.exchangeRate = exchangeRate;
-        this.date = new Date();
-    }
-
-    public Transaction(UUID uuid,
-                       OperationType type,
-                       Currency currency,
-                       BigDecimal amount,
-                       BigDecimal exchangeRate) {
-        this.uuid = uuid;
-        this.type = type;
-        this.currency = currency;
-        this.amount = amount;
-        this.exchangeRate = exchangeRate;
-        this.date = new Date();
-    }
-
-
-    public Transaction(UUID uuid,
-                       OperationType type,
-                       Currency currency,
-                       BigDecimal amount,
-                       BigDecimal exchangeRate,
-                       Date date) {
-        this.uuid = uuid;
+    public Transaction(Long id, OperationType type, Currency currency,
+                       BigDecimal amount, BigDecimal exchangeRate, Date date,
+                       TransactionCategory category, Long walletId) {
+        this.id = id;
         this.type = type;
         this.currency = currency;
         this.amount = amount;
         this.exchangeRate = exchangeRate;
         this.date = date;
+        this.category = category;
+        this.walletId = walletId;
     }
 
-    public static Transaction getRandomTransaction() {
-        Random random = new Random();
-        Transaction transaction = new Transaction(
-                UUID.randomUUID(),
-                OperationType.values()[random.nextInt(OperationType.values().length)],
-                Currency.values()[random.nextInt(Currency.values().length)],
-                BigDecimal.valueOf(random.nextDouble() * 5000),
-                BigDecimal.valueOf(random.nextDouble() * 60),
-                new Date());
-        transaction.setCategory(TransactionCategory.values()
-                [random.nextInt(TransactionCategory.values().length)]);
-        return transaction;
+    public Transaction(OperationType type, Currency currency,
+                       BigDecimal amount, BigDecimal exchangeRate, Date date,
+                       TransactionCategory category, Long walletId) {
+        this.type = type;
+        this.currency = currency;
+        this.amount = amount;
+        this.exchangeRate = exchangeRate;
+        this.date = date;
+        this.category = category;
+        this.walletId = walletId;
     }
 
-    public UUID getUuid() {
-        return uuid;
+    public Long getId() {
+        return id;
     }
 
     public OperationType getType() {
@@ -89,10 +60,6 @@ public class Transaction {
         return amount;
     }
 
-    public void setAmount(BigDecimal amount) {
-        this.amount = amount;
-    }
-
     public BigDecimal getExchangeRate() {
         return exchangeRate;
     }
@@ -105,15 +72,11 @@ public class Transaction {
         return category;
     }
 
-    public void setCategory(TransactionCategory category) {
-        this.category = category;
+    public Long getWalletId() {
+        return walletId;
     }
 
-    public Wallet getWallet() {
-        return wallet;
-    }
-
-    public void setWallet(Wallet wallet) {
-        this.wallet = wallet;
+    public String getWalletName() {
+        return walletName;
     }
 }

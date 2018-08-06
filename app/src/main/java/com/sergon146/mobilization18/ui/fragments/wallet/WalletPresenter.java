@@ -5,12 +5,10 @@ import com.sergon146.business.contracts.WalletUseCase;
 import com.sergon146.mobilization18.navigation.MainRouter;
 import com.sergon146.mobilization18.ui.base.BasePresenter;
 
-import java.util.UUID;
-
 @InjectViewState
 public class WalletPresenter extends BasePresenter<WalletView> {
     private final WalletUseCase useCase;
-    private UUID uuid;
+    private long id;
 
     public WalletPresenter(MainRouter router, WalletUseCase useCase) {
         super(router);
@@ -22,16 +20,16 @@ public class WalletPresenter extends BasePresenter<WalletView> {
         return "WalletPresenter";
     }
 
-    public void setUuid(UUID uuid) {
-        if (uuid.equals(this.uuid)) {
+    public void setId(long id) {
+        if (id == this.id) {
             return;
         }
 
-        this.uuid = uuid;
-        bind(onUi(useCase.getWallet(uuid))
+        this.id = id;
+        bind(onUi(useCase.getWallet(id))
                 .subscribe(wallet -> getViewState().showWallet(wallet)));
 
-        bind(onUi(useCase.getWalletTransactions(uuid)).subscribe(transactions -> {
+        bind(onUi(useCase.getWalletTransactions(id)).subscribe(transactions -> {
             getViewState().showTransactions(transactions);
         }));
     }

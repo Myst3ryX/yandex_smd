@@ -56,6 +56,7 @@ public class App extends Application implements HasActivityInjector {
         Resources res = getAppResources();
         Core core = Core.initInstance(res.getString(R.string.exchange_base_url));
         core.initApi();
+        core.initDb(this);
     }
 
     @Override

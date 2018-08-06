@@ -24,7 +24,7 @@ public class WalletFragmentAdapter extends FragmentStatePagerAdapter {
         }
 
         Wallet wallet = wallets.get(position);
-        return WalletFragment.newInstance(wallet.getUuid());
+        return WalletFragment.newInstance(wallet.getId());
     }
 
     @Override

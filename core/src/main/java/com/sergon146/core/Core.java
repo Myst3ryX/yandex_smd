@@ -1,11 +1,20 @@
 package com.sergon146.core;
 
+import android.arch.persistence.room.Room;
+import android.content.Context;
+
 import com.facebook.stetho.okhttp3.StethoInterceptor;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.sergon146.business.model.Wallet;
+import com.sergon146.business.model.types.Currency;
+import com.sergon146.business.model.types.WalletType;
 import com.sergon146.core.api.ApiService;
+import com.sergon146.core.db.WalletsDatabase;
+import com.sergon146.core.mapper.WalletEntityMapper;
 import com.sergon146.core.rx.RxThreadCallAdapter;
 
+import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 
@@ -24,9 +33,12 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class Core {
+
     private static Core instance;
     private ApiService apiService;
     private String endpoint;
+
+    private WalletsDatabase db;
 
     public static Core initInstance(String endpoint) {
         if (instance == null) {
@@ -39,6 +51,27 @@ public class Core {
 
     public static ApiService api() {
         return instance.apiService;
+    }
+
+    public static WalletsDatabase getDatabase() {
+        return instance.db;
+    }
+
+    public void initDb(Context context) {
+        db = Room.databaseBuilder(context, WalletsDatabase.class, "wallets_db")
+                .allowMainThreadQueries()
+                .build();
+        if (db.getWalletDao().isEmpty()) {
+            Wallet walletCash = new Wallet(BigDecimal.ZERO, Currency.RUBLE,
+                    context.getResources().getString(R.string.title_wallet_cash), WalletType.CASH);
+            Wallet walletDebit = new Wallet(BigDecimal.ZERO, Currency.DOLLAR,
+                    context.getResources().getString(R.string.title_wallet_debit), WalletType.DEBIT_CARD);
+            Wallet walletCredit = new Wallet(BigDecimal.ZERO, Currency.RUBLE,
+                    context.getResources().getString(R.string.title_wallet_credit), WalletType.CREDIT_CARD);
+            db.getWalletDao().addWallet(WalletEntityMapper.transformToEntity(walletCash));
+            db.getWalletDao().addWallet(WalletEntityMapper.transformToEntity(walletDebit));
+            db.getWalletDao().addWallet(WalletEntityMapper.transformToEntity(walletCredit));
+        }
     }
 
     public void initApi() {
